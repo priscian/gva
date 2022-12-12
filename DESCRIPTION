@@ -1,0 +1,25 @@
+Package: gva
+Title: Retrieve & Analyze Data from the Gun Violence Archive (GVA)
+<<<<<<< HEAD
+Version: 0.3.0
+Authors@R: person("Jim", "Java", email = "james.j.java@gmail.com", role = c("aut", "cre"),
+  comment = c(ORCID = "0000-0002-8254-3177"))
+Description: Retrieve & analyze data from the Gun Violence Archive (GVA).
+Depends: R (>= 4.2.0), magrittr, tribe, dplyr, rgdal
+Suggests: knitr, pander, testthat
+Imports: uuid, httr, rvest, xml2, DBI, dbx, RSQLite, ggmap, sp, keystone
+=======
+Version: 0.2.0
+Authors@R: person("Jim", "Java", email = "james.j.java@gmail.com", role = c("aut", "cre"),
+  comment = c(ORCID = "0000-0002-8254-3177"))
+Description: Retrieve & analyze data from the Gun Violence Archive (GVA).
+Depends: R (>= 3.5.0), magrittr, tribe, dplyr
+Suggests: knitr, pander, testthat
+Imports: uuid, httr, rvest, xml2, DBI, dbx, RSQLite, ggmap, keystone
+>>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
+Remotes: github::priscian/keystone
+License: Artistic-2.0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
