@@ -13,11 +13,8 @@ export(gva_retrieve_by_date)
 export(gva_update_db)
 export(gva_update_missing_geolocations)
 export(gva_update_missing_geolocations_google)
-<<<<<<< HEAD
 export(haversine_distance)
 export(match_blank_zip_to_polygon_coords)
-=======
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 importFrom(keystone,"%_%")
 importFrom(keystone,"%nin%")
 importFrom(keystone,cordon)

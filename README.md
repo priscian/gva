@@ -6,10 +6,7 @@ Here's how to set up and test-populate a local GVA database.
 
 ```r
 ## Prelims.
-<<<<<<< HEAD
 options(keystone_parallel = TRUE)
-=======
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 library(gva)
 #keystone::reload_all("gva", redocument = FALSE)
 
@@ -86,14 +83,9 @@ ll %>% print
 Once you've set up a complete database, you might want to update it every week or month or so.
 
 ```r
-<<<<<<< HEAD
 ## Update DB & add any failed geolocations by hand.
 ## Use https://www.gunviolencearchive.org/incident/[incident_id] to get geolocation.
 options(keystone_parallel = TRUE)
-=======
-## Update DB & add any failed geolocations by hand
-## Use https://www.gunviolencearchive.org/incident/[incident_id] to get geolocation
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 library(gva)
 #keystone::reload_all("gva", redocument = FALSE)
 
@@ -101,11 +93,7 @@ data_dir <- getOption("gva_db_location")
 if (is.null(data_dir)) data_dir <- "."
 setwd(data_dir)
 
-<<<<<<< HEAD
 ## Update DB.
-=======
-## Update DB
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 gva_update_db()
 ids <- gva_get_missing_geolocation_ids()
 ids %>% length %>% print
@@ -113,11 +101,8 @@ ids %>% length %>% print
 g <- gva_update_missing_geolocations_google()
 print(date())
 g %>% print
-<<<<<<< HEAD
 ## Fill in missing 'geolocation' table ZIP codes by cruder searches:
 match_blank_zip_to_polygon_coords(update_db = TRUE)
-=======
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 
 ### N.B. Most updates will end here, but see some error corrections below.
 
@@ -131,7 +116,6 @@ ge <- read.table(text = '
 dplyr::filter(!is.na(lat) & !is.na(lon))
 ge %>% print
 
-<<<<<<< HEAD
 conn <- gva_connect_db()
 dbx::dbxInsert(conn, "geolocation", ge)
 DBI::dbDisconnect(conn)
@@ -141,17 +125,6 @@ DBI::dbDisconnect(conn)
 ## Check record
 get_sql <- "SELECT * FROM geolocation"
 conn <- gva_connect_db()
-=======
-conn <- gva_db_connect()
-dbx::dbxInsert(conn, "geolocation", ge)
-DBI::dbDisconnect(conn)
-
-### Update existing records
-
-## Check record
-get_sql <- "SELECT * FROM geolocation"
-conn <- gva_db_connect()
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 a0 <- DBI::dbGetQuery(conn, get_sql)
 DBI::dbDisconnect(conn)
 a <- a0 %>% dplyr::filter(incident_id == "2403713")
@@ -164,21 +137,13 @@ gu <- read.table(text = '
 ', header = TRUE, colClasses = c(zip = "character"))
 gu %>% print
 
-<<<<<<< HEAD
 conn <- gva_connect_db()
-=======
-conn <- gva_db_connect()
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 dbx::dbxUpdate(conn, "geolocation", gu, where_cols = c("incident_id"))
 DBI::dbDisconnect(conn)
 
 ## Check record again
 get_sql <- "SELECT * FROM geolocation"
-<<<<<<< HEAD
 conn <- gva_connect_db()
-=======
-conn <- gva_db_connect()
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
 b0 <- DBI::dbGetQuery(conn, get_sql)
 DBI::dbDisconnect(conn)
 b <- b0 %>% dplyr::filter(incident_id == "2403713")

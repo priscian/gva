@@ -64,21 +64,14 @@ gva_make_new_db <- function(
 
 #' @export
 gva_connect_db <- function(
-<<<<<<< HEAD
   data_dir = getOption("gva_db_location"),
-=======
-  data_dir = ".",
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
   file_path = "gva.db",
   timestamp... = list()
 )
 {
-<<<<<<< HEAD
   if (is.null(data_dir))
     data_dir <- "."
 
-=======
->>>>>>> 1913027bcf308ac3e78fc84684c1af7bf6597b21
   fileExt <- tools::file_ext(file_path)
 
   timestampArgs <- list(use_seconds = TRUE, seconds_sep = "+")
