@@ -78,7 +78,23 @@ ll %>% print
 ## Create full GVA database: make new DB file & populate it.
 ## (N.B. Don't do this as a test!)
 # gva_create_full_db()
+
 ```
+
+```sql
+--- Transferring geolocation data from an older version of the DB
+
+-- You might need to recreate the full database at some point;
+--   if so, transfer the 'geolocation' table w/ the following SQL,
+--   after loading the older DB (e.g. in DB Browser for SQLite):
+ATTACH DATABASE './gva_2023-10-02.db' AS other; -- Attach newer DB
+PRAGMA foreign_keys = 0; -- Bypass "FOREIGN KEY constraint failed" error
+INSERT INTO other.geolocation
+  SELECT * FROM main.geolocation;
+PRAGMA foreign_keys = 1;
+DETACH other;
+```
+
 
 Once you've set up a complete database, you might want to update it every week or month or so.
 

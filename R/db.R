@@ -25,6 +25,9 @@ gva_make_new_db <- function(
       address TEXT,
       num_killed INTEGER,
       num_injured INTEGER,
+      suspects_killed INTEGER,
+      suspects_injured INTEGER,
+      suspects_arrested INTEGER,
       source TEXT,
       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     );"
@@ -93,18 +96,18 @@ gva_connect_db <- function(
 
 
 #' @export
-gva_create_full_db <- function(overwrite = FALSE)
+gva_create_full_db <- function(overwrite = FALSE, ...)
 {
   ## Dates for full download
-  full_download_dates <- seq(ymd("2013-01-01"), today() - 2, by = "day")
+  full_download_dates <- seq(lubridate::ymd("2013-01-01"), lubridate::today() - 2, by = "day")
   full_download_range <- rbind(
-    keystone::dataframe(ymd("1969-01-01"), ymd("2012-12-31")),
+    keystone::dataframe(lubridate::ymd("1969-01-01"), lubridate::ymd("2012-12-31")),
     keystone::dataframe(full_download_dates, full_download_dates)
   ) %>% (function(x) { colnames(x) <- c("start_date", "end_date"); x })
 
   gva_make_new_db(overwrite = overwrite)
 
-  conn <- gva_connect_db()
+  conn <- gva_connect_db(...)
   gva_augment_db(conn, full_download_range)
   DBI::dbDisconnect(conn)
 
@@ -141,9 +144,9 @@ gva_augment_db <- function(conn, download_range, .progress = "none")
 
 
 #' @export
-gva_update_db <- function()
+gva_update_db <- function(...)
 {
-  conn <- gva_connect_db()
+  conn <- gva_connect_db(...)
 
   latest_incident_date_sql <-
     "select max(date) from incidents;"
@@ -157,7 +160,7 @@ gva_update_db <- function()
   if (lubridate::mdy(startDate) > lubridate::mdy(endDate)) {
     cat("No update necessary.\n")
 
-    return (nop())
+    return (keystone::nop())
   }
 
   partial_download_dates <- seq(lubridate::mdy(startDate), lubridate::mdy(endDate), by = "day")

@@ -63,3 +63,34 @@ gva_process_arcgis_geocodes <- function(
 ## usage:
 # g0 <- process_arcgis_geocodes("./data/gva_addresses_geo_20210129.csv")
 # g <- process_arcgis_geocodes("./data/gva_addresses_geo_20210129.csv", write_table = FALSE)
+
+
+## https://dash.geocod.io/
+#' @export
+gva_process_geocodio_geocodes <- function(
+  geocodes_path,
+  write_table = TRUE,
+  ...
+)
+{
+  g0 <- rio::import(geocodes_path)
+
+  g <- g0 %>%
+    dplyr::transmute(
+      incident_id = as.integer(id),
+      lat = Latitude,
+      lon = Longitude,
+      zip = dplyr::case_when(!is.na(Zip) ~ sprintf("%05d", Zip), TRUE ~ NA_character_)
+    ) %>%
+    dplyr::filter(!(lon == 0 & lat == 0)) # These are (US) missings from ArcGIS
+
+  if (write_table) {
+    conn <- gva_connect_db()
+    dbx::dbxInsert(conn, "geolocation", g, ...)
+    DBI::dbDisconnect(conn)
+
+    return (g0)
+  }
+
+  return (g)
+}

@@ -17,7 +17,7 @@ match_blank_zip_to_polygon_coords <- function(
 )
 {
   ## Load object 'zip_code_data'.
-  load(system.file("./extdata/zip-codes+demo.RData", package = "gva", mustWork = TRUE))
+  load(system.file("extdata/zip-codes+demo.RData", package = "gva", mustWork = TRUE))
 
   zip_coords <- zip_code_data$zip_code_database_enterprise %>%
     dplyr::select(zip, approximate_latitude, approximate_longitude) %>%
@@ -50,7 +50,7 @@ match_blank_zip_to_polygon_coords <- function(
   #   sp::spTransform(sp::CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
   # save(tl_2022_us_zcta520, file = system.file("inst/extdata/tl_2022_us_zcta520.RData", package = "gva"))
 
-  load(system.file("inst/extdata/sub-rosa/tl_2022_us_zcta520.RData", package = "gva"))
+  load(system.file("extdata/sub-rosa/tl_2022_us_zcta520.RData", package = "gva"))
 
   ## Transform coordinates into 'SpatialPointsDataFrame'
   spdf <- sp::SpatialPointsDataFrame(coords = coords %>% dplyr::select(lon, lat), data = coords,
@@ -69,20 +69,23 @@ match_blank_zip_to_polygon_coords <- function(
     { coords %>% dplyr::filter(is.na(zip) | trimws(zip) == "") %>% print; utils::flush.console() }
 
   ## Brute-force the stragglers using Haversine distance
-  flit <- coords %>% dplyr::filter(is.na(zip) | trimws(zip) == "") %>%
-    dplyr::mutate(
-      zip =
-        plyr::alply(., 1,
-          function(a)
-          {
-            #print(a); utils::flush.console()
-            plyr::alply(zip_coords, 1,
-              function(b)
-              {
-                haversine_distance(a["lat"], a["lon"], b["lat"], b["lon"])
-              })  %>% unlist %>% as.vector %>% which.min %>% `[`(zip_coords$zip, .)
-          }, .parallel = TRUE) %>% unlist %>% as.vector
-    )
+  flit <- coords %>% dplyr::filter(is.na(zip) | trimws(zip) == "")
+  if (NROW(flit != 0)) {
+    flit <- flit %>%
+      dplyr::mutate(
+        zip =
+          plyr::alply(., 1,
+            function(a)
+            {
+              #print(a); utils::flush.console()
+              plyr::alply(zip_coords, 1,
+                function(b)
+                {
+                  haversine_distance(a["lat"], a["lon"], b["lat"], b["lon"])
+                })  %>% unlist(use.names = FALSE) %>% which.min %>% `[`(zip_coords$zip, .)
+            }, .parallel = TRUE) %>% unlist(use.names = FALSE)
+      )
+  }
   if (verbose) print(flit %>% as.data.frame)
   coords <- dplyr::rows_patch(coords, flit %>% dplyr::select(id, zip))
 

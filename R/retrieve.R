@@ -107,10 +107,16 @@ gva_retrieve_by_date <- function(
   d <- if (results_type == "incidents") {
     dplyr::rename(d,
       id = "Incident ID",
-      num_killed = "# Killed",
-      num_injured = "# Injured",
+      num_killed = "Victims Killed",
+      num_injured = "Victims Injured",
+      suspects_killed = "Suspects Killed",
+      suspects_injured = "Suspects Injured",
+      suspects_arrested = "Suspects Arrested",
       source = "Operations"
-    )
+    ) #%>%
+    ## N.B. At some point after 26 May 2023, "Killed" was broken out to separate victims from suspects.
+    ##  This means I may need to re-download the whole DB again at some point.... :(
+    #dplyr::select(-all_of(c("Suspects Killed", "Suspects Injured", "Suspects Arrested")))
   } else if (results_type == "participants") {
     dplyr::rename(d,
       gender = "Participant Gender",

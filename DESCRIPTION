@@ -1,6 +1,6 @@
 Package: gva
 Title: Retrieve & Analyze Data from the Gun Violence Archive (GVA)
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: person("Jim", "Java", email = "james.j.java@gmail.com", role = c("aut", "cre"),
   comment = c(ORCID = "0000-0002-8254-3177"))
 Description: Retrieve & analyze data from the Gun Violence Archive (GVA).
@@ -12,4 +12,4 @@ License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
